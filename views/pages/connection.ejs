@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link href="/css/connection.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <div class="container-fluid vh-100 d-flex align-items-center justify-content-center">
+        <div class="row w-100">
+            <div class="col-12 col-md-8 col-lg-6 col-xl-4 mx-auto">
+                <div class="card shadow-lg border-0 rounded-4">
+                    <div class="card-body p-5 text-center">
+                        <!-- Logo/Header -->
+                        <div class="mb-4">
+                            <i class="bi bi-whatsapp text-success" style="font-size: 4rem;"></i>
+                            <h1 class="h3 fw-bold text-dark mt-3">WhatsApp Dispara</h1>
+                            <p class="text-muted">Sistema de Disparos em Massa</p>
+                        </div>
+
+                        <!-- Connection Status -->
+                        <div id="connectionStatus" class="mb-4">
+                            <div class="alert alert-info border-0 rounded-3" role="alert">
+                                <div class="d-flex align-items-center justify-content-center">
+                                    <div class="spinner-border spinner-border-sm me-2" role="status" style="display: none;">
+                                        <span class="visually-hidden">Carregando...</span>
+                                    </div>
+                                    <span id="statusText">Inicializando...</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- QR Code Container -->
+                        <div id="qrContainer" class="mb-4" style="display: none;">
+                            <div class="card bg-light border-0 rounded-3 p-4">
+                                <h5 class="card-title mb-3">
+                                    <i class="bi bi-qr-code me-2"></i>
+                                    Escaneie o QR Code
+                                </h5>
+                                <div id="qrCodeImage" class="mb-3">
+                                    <!-- QR Code will be inserted here -->
+                                </div>
+                                <p class="small text-muted mb-0">
+                                    Abra o WhatsApp no seu celular, vá em <strong>Dispositivos conectados</strong> 
+                                    e escaneie este código QR
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Connected Info -->
+                        <div id="connectedInfo" class="mb-4" style="display: none;">
+                            <div class="alert alert-success border-0 rounded-3" role="alert">
+                                <div class="d-flex align-items-center justify-content-center mb-2">
+                                    <i class="bi bi-check-circle-fill me-2"></i>
+                                    <strong>Conectado com sucesso!</strong>
+                                </div>
+                                <div id="phoneInfo" class="small">
+                                    <!-- Phone number will be displayed here -->
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-success btn-lg rounded-3 px-4" id="enterDashboard">
+                                <i class="bi bi-arrow-right-circle me-2"></i>
+                                Acessar Painel
+                            </button>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div id="actionButtons" class="d-grid gap-2">
+                            <button type="button" class="btn btn-outline-primary rounded-3" id="restartConnection">
+                                <i class="bi bi-arrow-clockwise me-2"></i>
+                                Reiniciar Conexão
+                            </button>
+                            <button type="button" class="btn btn-outline-danger rounded-3" id="disconnectBtn" style="display: none;">
+                                <i class="bi bi-x-circle me-2"></i>
+                                Desconectar
+                            </button>
+                        </div>
+
+                        <!-- Loading Overlay Removed - Using only status spinner when needed -->
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div class="text-center mt-4">
+                    <p class="small text-muted">
+                        <i class="bi bi-shield-check me-1"></i>
+                        Conexão segura e criptografada
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JS -->
+    <script src="/js/connection.js"></script>
+</body>
+</html>

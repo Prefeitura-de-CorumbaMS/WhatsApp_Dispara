@@ -1,0 +1,51 @@
+<footer class="footer mt-auto py-3 bg-dark text-white shadow-lg">
+    <div class="container-fluid">
+        <div class="row align-items-center">
+            <!-- Status de conexão -->
+            <div class="col-md-4">
+                <div class="d-flex align-items-center">
+                    <div class="px-2 py-1 rounded-3 <%= statusClass || 'bg-success' %> d-inline-flex align-items-center">
+                        <i class="fas fa-circle text-success me-2"></i>
+                        <span><%= connectionStatus || 'Conectado' %></span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Copyright -->
+            <div class="col-md-4 text-center">
+                <p class="mb-0">&copy; <%= new Date().getFullYear() %> WhatsApp Disparador</p>
+            </div>
+            
+            <!-- Relógio em tempo real -->
+            <div class="col-md-4 text-end">
+                <div id="live-clock">
+                    <span class="text-light d-none d-md-block">
+                        <i class="far fa-calendar-alt me-1"></i>
+                        <%= new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long'}) %> 
+                    </span>
+                    <i class="far fa-clock me-1"></i>
+                    <span id="current-time"><%= new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) %></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // Atualiza o relógio a cada segundo
+    function updateClock() {
+        const now = new Date();
+        const timeString = now.toLocaleTimeString('pt-BR', { 
+            hour: '2-digit', 
+            minute: '2-digit',
+            second: '2-digit'
+        });
+        document.getElementById('current-time').textContent = timeString;
+    }
+    
+    // Inicia o relógio quando a página carrega
+    document.addEventListener('DOMContentLoaded', function() {
+        updateClock();
+        setInterval(updateClock, 1000);
+    });
+</script>

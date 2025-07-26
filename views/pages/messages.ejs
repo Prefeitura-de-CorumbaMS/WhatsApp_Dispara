@@ -1,0 +1,88 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-6">
+            <div class="card mb-4 shadow-sm border-0 rounded-3">
+                <div class="card-header bg-primary text-white py-3">
+                    <h3 class="h5 mb-0 d-flex align-items-center">
+                        <i class="fas fa-plus-circle me-2"></i>
+                        Nova Mensagem
+                    </h3>
+                    <p class="text-muted mb-0" style="color: #fff !important;">Envie mensagens para seus contatos de
+                        forma rápida e eficiente.</p>
+                </div>
+                <div class="card-body p-4">
+                    <form id="message-form">
+                        <div class="mb-4">
+                            <label for="message-content" class="form-label fw-medium">Mensagem:</label>
+                            <textarea class="form-control border-light-subtle" id="message-content" rows="4"
+                                placeholder="Digite sua mensagem aqui..."></textarea>
+                        </div>
+                        <div class="mb-4">
+                            <label for="contact-selection" class="form-label fw-medium">Selecionar Contatos:</label>
+                            <select multiple class="form-select border-light-subtle" id="contact-selection"
+                                style="min-height: 120px">
+                                <option value="1">Carregando contatos...</option>
+                            </select>
+                            <div class="form-check mt-2">
+                                <input class="form-check-input" type="checkbox" id="selectAllContacts">
+                                <label class="form-check-label" for="selectAllContacts">Selecionar Todos</label>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label fw-medium">Anexar Mídia:</label>
+                            <div class="input-group">
+                                <input type="file" class="form-control border-light-subtle" id="media-upload">
+                                <button class="btn btn-outline-secondary" type="button" id="clear-media">Limpar</button>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary px-4 py-2 d-flex align-items-center">
+                            <i class="fas fa-paper-plane me-2"></i>
+                            Enviar Mensagem
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="card shadow-sm border-0 rounded-3">
+                <div class="card-header bg-primary text-white py-3">
+                    <h3 class="h5 mb-0 d-flex align-items-center">
+                        <i class="fas fa-history me-2"></i>
+                        Mensagens Enviadas
+                    </h3>
+                </div>
+                <div class="card-body p-4">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="border-0">Data/Hora</th>
+                                    <th class="border-0">Destinatário</th>
+                                    <th class="border-0">Mensagem</th>
+                                    <th class="border-0">Status</th>
+                                    <th class="border-0 text-end">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="messages-table-body" class="border-top-0">
+                                <tr>
+                                    <td colspan="5" class="text-center py-4">
+                                        <div class="d-flex flex-column align-items-center">
+                                            <div class="spinner-border text-primary mb-2" role="status">
+                                                <span class="visually-hidden">Carregando...</span>
+                                            </div>
+                                            <span class="text-muted">Carregando mensagens...</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="messages-pagination" class="d-flex justify-content-center mt-4">
+                        <!-- Paginação será inserida via JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/js/messages.js"></script>

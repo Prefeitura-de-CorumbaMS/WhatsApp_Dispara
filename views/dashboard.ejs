@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="h-100">
+<%- include('./components/header') %>
+<body class="bg-light d-flex flex-column h-100">
+    <!-- Espaço para a navbar fixa -->
+    <div style="padding-top: 60px;"></div>
+    
+    <!-- Conteúdo principal -->
+    <div class="container-fluid p-0 flex-grow-1">
+        <div class="row g-0">
+            <%- include('./components/main', { currentPage }) %>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <%- include('./components/footer', { statusClass, connectionStatus }) %>
+
+    <!-- Loading Modal -->
+    <div class="modal fade" id="loadingModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-body text-center py-4">
+                    <div class="spinner-border text-primary mb-3" style="width: 3rem; height: 3rem;" role="status">
+                        <span class="visually-hidden">Carregando...</span>
+                    </div>
+                    <h5 id="loadingText" class="fw-bold">Processando...</h5>
+                    <p class="text-muted mb-0" id="loadingSubtext">Aguarde um momento</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS (local) -->
+    <script src="/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JS -->
+    <script src="/js/dashboard.js"></script>
+    
+    <script>
+        // Initialize dashboard when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            // Passar a seção alvo para o DashboardManager
+            const targetSection = '<%= locals.targetSection || "messages" %>';
+            window.dashboardManager = new DashboardManager(targetSection);
+            
+            // Initialize module-specific manager if needed
+            if (typeof window.initializeModule === 'function') {
+                window.initializeModule(window.dashboardManager);
+            }
+        });
+        
+        // Global functions for navbar actions
+        function showConnectionStatus() {
+            // Implement connection status check
+            fetch('/api/whatsapp/status')
+                .then(response => response.json())
+                .then(data => {
+                    alert(`Status da conexão: ${data.status}`);
+                })
+                .catch(error => {
+                    console.error('Erro ao verificar status:', error);
+                    alert('Erro ao verificar status da conexão');
+                });
+        }
+        
+        function confirmDisconnect() {
+            return confirm('Tem certeza que deseja desconectar e voltar à tela de conexão?');
+        }
+    </script>
+</body>
+</html>

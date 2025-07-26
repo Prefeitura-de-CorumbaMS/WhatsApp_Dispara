@@ -1,0 +1,138 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card shadow-sm border-0 rounded-3">
+                <div class="card-header bg-primary text-white py-3">
+                    <div class="d-flex justify-content-between align-items-center flex-wrap">
+                        <div class="d-flex flex-column">
+                            <h3 class="h5 mb-1 d-flex align-items-center">
+                                <i class="fas fa-list me-2"></i>
+                                Templates de Mensagens
+                            </h3>
+                            <p class="text-white-50 mb-0 small">Gerencie seus templates de mensagens para envios rápidos e padronizados.</p>
+                        </div>
+                        <button class="btn btn-sm btn-light d-flex align-items-center mt-md-0 mt-2" id="add-template-btn">
+                            <i class="fas fa-plus me-1"></i> Novo Template
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row mb-4 g-3">
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-light-subtle">
+                                    <i class="fas fa-search text-muted"></i>
+                                </span>
+                                <input type="text" class="form-control border-light-subtle" id="search-templates" placeholder="Buscar templates...">
+                                <button class="btn btn-outline-secondary border-light-subtle" type="button" id="clear-template-search">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <select class="form-select border-light-subtle" id="filter-category">
+                                <option value="">Todas as Categorias</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="border-0">Nome</th>
+                                    <th class="border-0">Categoria</th>
+                                    <th class="border-0">Conteúdo</th>
+                                    <th class="border-0">Variáveis</th>
+                                    <th class="border-0 text-end">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="templates-table-body" class="border-top-0">
+                                <tr>
+                                    <td colspan="5" class="text-center py-4">
+                                        <div class="d-flex flex-column align-items-center">
+                                            <div class="spinner-border text-primary mb-2" role="status">
+                                                <span class="visually-hidden">Carregando...</span>
+                                            </div>
+                                            <span class="text-muted">Carregando templates...</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="templates-pagination" class="d-flex justify-content-center mt-4">
+                        <!-- Paginação será inserida via JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para Adicionar/Editar Template -->
+<div class="modal fade" id="templateModal" tabindex="-1" aria-labelledby="templateModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header bg-primary text-white py-3">
+                <h5 class="modal-title d-flex align-items-center" id="templateModalLabel">
+                    <i class="fas fa-file-alt me-2"></i>
+                    <span>Adicionar Template</span>
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body p-4">
+                <form id="template-form">
+                    <input type="hidden" id="template-id">
+                    <div class="mb-4">
+                        <label for="template-name" class="form-label fw-medium">Nome do Template</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-light-subtle">
+                                <i class="fas fa-tag text-muted"></i>
+                            </span>
+                            <input type="text" class="form-control border-light-subtle" id="template-name" required>
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <label for="template-category" class="form-label fw-medium">Categoria</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-light-subtle">
+                                <i class="fas fa-folder text-muted"></i>
+                            </span>
+                            <input type="text" class="form-control border-light-subtle" id="template-category" list="category-list">
+                        </div>
+                        <datalist id="category-list">
+                            <!-- Categorias serão inseridas via JavaScript -->
+                        </datalist>
+                    </div>
+                    <div class="mb-4">
+                        <label for="template-content" class="form-label fw-medium">Conteúdo</label>
+                        <textarea class="form-control border-light-subtle" id="template-content" rows="5" required></textarea>
+                        <div class="form-text mt-2"><i class="fas fa-info-circle me-1"></i> Use {{variavel}} para inserir variáveis no texto</div>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label fw-medium">Variáveis Detectadas</label>
+                        <div id="variables-list" class="border rounded-3 p-3 bg-light border-light-subtle">
+                            <div class="d-flex align-items-center text-muted">
+                                <i class="fas fa-code me-2"></i>
+                                <span>Nenhuma variável detectada</span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer border-top-0 pt-0 pb-4 px-4">
+                <button type="button" class="btn btn-light d-flex align-items-center" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-2"></i>
+                    Cancelar
+                </button>
+                <button type="button" class="btn btn-primary d-flex align-items-center" id="save-template">
+                    <i class="fas fa-save me-2"></i>
+                    Salvar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/js/templates.js"></script>

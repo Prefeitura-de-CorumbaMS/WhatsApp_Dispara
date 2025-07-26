@@ -1,0 +1,203 @@
+<div class="container-fluid">
+    
+    <div class="row mb-4 g-4">
+        <div class="col-md-6">
+            <div class="card h-100 shadow-sm border-0 rounded-3">
+                <div class="card-header bg-primary text-white py-3">
+                    <h3 class="h5 mb-0 d-flex align-items-center">
+                        <i class="fas fa-calendar-alt me-2"></i>
+                        Filtrar Período
+                    </h3>
+                </div>
+                <div class="card-body p-4">
+                    <form id="date-filter-form">
+                        <div class="row g-3">
+                            <div class="col-md-5">
+                                <div class="mb-3">
+                                    <label for="start-date" class="form-label fw-medium">Data Inicial</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light border-light-subtle">
+                                            <i class="fas fa-calendar text-muted"></i>
+                                        </span>
+                                        <input type="date" class="form-control border-light-subtle" id="start-date">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="mb-3">
+                                    <label for="end-date" class="form-label fw-medium">Data Final</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light border-light-subtle">
+                                            <i class="fas fa-calendar-check text-muted"></i>
+                                        </span>
+                                        <input type="date" class="form-control border-light-subtle" id="end-date">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-2 d-flex align-items-end">
+                                <div class="mb-3 w-100">
+                                    <button type="submit" class="btn btn-primary w-100 d-flex align-items-center justify-content-center">
+                                        <i class="fas fa-filter me-2"></i>
+                                        Filtrar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card h-100 shadow-sm border-0 rounded-3">
+                <div class="card-header bg-primary text-white py-3">
+                    <h3 class="h5 mb-0 d-flex align-items-center">
+                        <i class="fas fa-file-export me-2"></i>
+                        Exportar Dados
+                    </h3>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label fw-medium">Relatório de Mensagens</label>
+                                <div class="d-grid">
+                                    <button class="btn btn-outline-primary d-flex align-items-center justify-content-center" id="export-messages-report">
+                                        <i class="fas fa-download me-2"></i> Exportar CSV
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label fw-medium">Relatório de Contatos</label>
+                                <div class="d-grid">
+                                    <button class="btn btn-outline-primary d-flex align-items-center justify-content-center" id="export-contacts-report">
+                                        <i class="fas fa-download me-2"></i> Exportar CSV
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4 g-4">
+        <div class="col-md-6">
+            <div class="card h-100 shadow-sm border-0 rounded-3">
+                <div class="card-header bg-primary text-white py-3">
+                    <h3 class="h5 mb-0 d-flex align-items-center">
+                        <i class="fas fa-chart-pie me-2"></i>
+                        Mensagens por Status
+                    </h3>
+                </div>
+                <div class="card-body p-4">
+                    <canvas id="messages-status-chart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card h-100 shadow-sm border-0 rounded-3">
+                <div class="card-header bg-primary text-white py-3">
+                    <h3 class="h5 mb-0 d-flex align-items-center">
+                        <i class="fas fa-chart-line me-2"></i>
+                        Mensagens por Dia
+                    </h3>
+                </div>
+                <div class="card-body p-4">
+                    <canvas id="messages-by-day-chart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-4 shadow-sm border-0 rounded-3">
+        <div class="card-header bg-primary text-white py-3">
+            <h3 class="h5 mb-0 d-flex align-items-center">
+                <i class="fas fa-chart-bar me-2"></i>
+                Estatísticas de Mensagens
+            </h3>
+        </div>
+        <div class="card-body p-4">
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <div class="card bg-success text-white mb-3 shadow-sm border-0 rounded-3 h-100">
+                        <div class="card-body p-3 d-flex flex-column align-items-center justify-content-center">
+                            <i class="fas fa-paper-plane mb-2 fs-3"></i>
+                            <h5 class="card-title text-center">Total Enviadas</h5>
+                            <p class="card-text h2 mb-0" id="total-sent">0</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-info text-white mb-3 shadow-sm border-0 rounded-3 h-100">
+                        <div class="card-body p-3 d-flex flex-column align-items-center justify-content-center">
+                            <i class="fas fa-check-circle mb-2 fs-3"></i>
+                            <h5 class="card-title text-center">Entregues</h5>
+                            <p class="card-text h2 mb-0" id="total-delivered">0</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-warning text-dark mb-3 shadow-sm border-0 rounded-3 h-100">
+                        <div class="card-body p-3 d-flex flex-column align-items-center justify-content-center">
+                            <i class="fas fa-eye mb-2 fs-3"></i>
+                            <h5 class="card-title text-center">Lidas</h5>
+                            <p class="card-text h2 mb-0" id="total-read">0</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-danger text-white mb-3 shadow-sm border-0 rounded-3 h-100">
+                        <div class="card-body p-3 d-flex flex-column align-items-center justify-content-center">
+                            <i class="fas fa-exclamation-triangle mb-2 fs-3"></i>
+                            <h5 class="card-title text-center">Falhas</h5>
+                            <p class="card-text h2 mb-0" id="total-failed">0</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm border-0 rounded-3">
+        <div class="card-header bg-primary text-white py-3">
+            <h3 class="h5 mb-0 d-flex align-items-center">
+                <i class="fas fa-list-alt me-2"></i>
+                Detalhamento de Mensagens
+            </h3>
+        </div>
+        <div class="card-body p-4">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="py-3">Data</th>
+                            <th class="py-3">Total</th>
+                            <th class="py-3">Entregues</th>
+                            <th class="py-3">Lidas</th>
+                            <th class="py-3">Falhas</th>
+                            <th class="py-3">Taxa de Sucesso</th>
+                        </tr>
+                    </thead>
+                    <tbody id="messages-stats-table">
+                        <tr>
+                            <td colspan="6" class="text-center py-4">
+                                <div class="d-flex align-items-center justify-content-center">
+                                    <div class="spinner-border spinner-border-sm text-primary me-2" role="status">
+                                        <span class="visually-hidden">Carregando...</span>
+                                    </div>
+                                    <span>Carregando estatísticas...</span>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="/js/reports.js"></script>

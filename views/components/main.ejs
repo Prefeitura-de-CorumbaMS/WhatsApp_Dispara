@@ -1,0 +1,12 @@
+<main class="col-12 px-md-4 py-4">
+    <div class="container-fluid px-0">
+        <% if (currentPage) { %>
+            <%- include(`../pages/${currentPage}`) %>
+        <% } else { %>
+            <div class="alert alert-info mt-4 shadow-sm">
+                <i class="fas fa-info-circle me-2"></i>
+                Selecione um módulo no menu superior para começar.
+            </div>
+        <% } %>
+    </div>
+</main>

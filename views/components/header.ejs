@@ -1,0 +1,61 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp Disparador - Dashboard</title>
+    
+    <!-- Bootstrap 5 CSS (local) -->
+    <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/@fortawesome/css/all.min.css" rel="stylesheet">  
+    
+    <!-- Custom CSS -->
+    <link href="/css/dashboard.css" rel="stylesheet">
+    
+    <!-- Bootstrap 5 JS (local) -->
+    <script src="/bootstrap/js/bootstrap.bundle.min.js" defer></script>
+</head>
+
+<!-- Navbar principal (Bootstrap 5) -->
+<header>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top shadow-sm">
+        <div class="container-fluid px-3">
+            <a class="navbar-brand fw-bold" href="/dashboard">
+                <i class="fab fa-whatsapp me-2"></i>
+                WhatsApp Disparador
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse justify-content-end" id="navbarMain">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link <%= currentPage === 'messages' ? 'active fw-bold' : '' %>" href="/messages">
+                            <i class="fas fa-paper-plane me-1"></i> Enviar Mensagens
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link <%= currentPage === 'templates' ? 'active fw-bold' : '' %>" href="/templates">
+                            <i class="fas fa-file-alt me-1"></i> Templates
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link <%= currentPage === 'contacts' ? 'active fw-bold' : '' %>" href="/contacts">
+                            <i class="fas fa-address-book me-1"></i> Contatos
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link <%= currentPage === 'reports' ? 'active fw-bold' : '' %>" href="/reports">
+                            <i class="fas fa-chart-bar me-1"></i> Relatórios
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link <%= currentPage === 'diagnostics' ? 'active fw-bold' : '' %>" href="/diagnostics">
+                            <i class="fas fa-medkit me-1"></i> Diagnóstico
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
