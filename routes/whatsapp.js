@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const WhatsAppService = require('../services/WhatsAppService');
 const WhatsAppSession = require('../models/WhatsAppSession');
+const { requireWhatsAppConnection } = require('../middleware/auth');
 
 // Initialize WhatsApp service when module loads
 WhatsAppService.initialize().catch(console.error);
@@ -95,34 +96,33 @@ router.post('/disconnect', async (req, res) => {
 });
 
 // Get WhatsApp contacts
-router.get('/contacts', async (req, res) => {
+router.get('/contacts', requireWhatsAppConnection, async (req, res) => {
   try {
-    const status = await WhatsAppService.getConnectionStatus();
-    
-    if (!status.isConnected) {
-      return res.status(400).json({
-        success: false,
-        message: 'WhatsApp not connected'
-      });
-    }
-
     const contacts = await WhatsAppService.getContacts();
+    
+    // Filtra para retornar apenas contatos de usuários, não grupos
+    const userContacts = contacts.filter(contact => !contact.isGroup && contact.isMyContact);
+
     res.json({
       success: true,
-      data: contacts
+      data: {
+        contacts: userContacts
+      }
     });
+
   } catch (error) {
     req.logger.error('Get WhatsApp contacts error:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to get contacts',
+      message: 'Falha ao obter contatos do WhatsApp',
       error: error.message
     });
   }
 });
 
+
 // Send test message
-router.post('/test-message', async (req, res) => {
+router.post('/test-message', requireWhatsAppConnection, async (req, res) => {
   try {
     const { to, message } = req.body;
 
@@ -130,15 +130,6 @@ router.post('/test-message', async (req, res) => {
       return res.status(400).json({
         success: false,
         message: 'Phone number and message are required'
-      });
-    }
-
-    const status = await WhatsAppService.getConnectionStatus();
-    
-    if (!status.isConnected) {
-      return res.status(400).json({
-        success: false,
-        message: 'WhatsApp not connected'
       });
     }
 

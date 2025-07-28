@@ -19,8 +19,7 @@
                         </div>
                         <div class="mb-4">
                             <label for="contact-selection" class="form-label fw-medium">Selecionar Contatos:</label>
-                            <select multiple class="form-select border-light-subtle" id="contact-selection"
-                                style="min-height: 120px">
+                            <select multiple class="form-select" id="contact-selection-select2" style="height: 200px;">
                                 <option value="1">Carregando contatos...</option>
                             </select>
                             <div class="form-check mt-2">
@@ -83,6 +82,53 @@
                 </div>
             </div>
         </div>
+        <div class="col-12" id="received-messages-section">
+            <div class="card shadow-sm border-0 rounded-3">
+                <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
+                    <h3 class="h5 mb-0 d-flex align-items-center">
+                        <i class="fas fa-inbox me-2"></i>
+                        Mensagens Recebidas
+                    </h3>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-sm btn-info active" id="show-all-messages">Todas</button>
+                        <button type="button" class="btn btn-sm btn-light" id="show-open-messages">Abertas</button>
+                        <button type="button" class="btn btn-sm btn-light" id="show-archived-messages">Arquivadas</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="border-0">Data/Hora</th>
+                                    <th class="border-0">Remetente</th>
+                                    <th class="border-0">Mensagem</th>
+                                    <th class="border-0">Status</th>
+                                    <th class="border-0 text-end">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="received-messages-table-body" class="border-top-0">
+                                <tr>
+                                    <td colspan="5" class="text-center py-4">
+                                        <div class="d-flex flex-column align-items-center">
+                                            <div class="spinner-border text-info mb-2" role="status">
+                                                <span class="visually-hidden">Carregando...</span>
+                                            </div>
+                                            <span class="text-muted">Carregando mensagens recebidas...</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="received-messages-pagination" class="d-flex justify-content-center mt-4">
+                        <!-- Paginação será inserida via JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+<script src="/bootstrap/js/bootstrap.bundle.min.js" type="text/javascript"></script>
 <script src="/js/messages.js"></script>
+<script src="/js/messageReceived.js"></script>

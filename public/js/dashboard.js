@@ -28,6 +28,18 @@ class DashboardManager {
         this.preloadScripts();
     }
 
+    // Função auxiliar para obter elemento de forma segura
+    safeGetElement(id) {
+        const element = document.getElementById(id);
+        return element; // Retorna null se não encontrar
+    }
+    
+    // Função auxiliar para criar modal de forma segura
+    safeCreateModal(id) {
+        const element = document.getElementById(id);
+        return element ? new bootstrap.Modal(element) : null;
+    }
+
     initializeElements() {
         this.elements = {
             // Navigation
@@ -37,28 +49,28 @@ class DashboardManager {
             sections: document.querySelectorAll('.content-section'),
             
             // Message form
-            messageForm: document.getElementById('messageForm'),
-            messageContent: document.getElementById('messageContent'),
-            mediaFile: document.getElementById('mediaFile'),
-            scheduledFor: document.getElementById('scheduledFor'),
-            charCount: document.getElementById('charCount'),
+            messageForm: this.safeGetElement('messageForm'),
+            messageContent: this.safeGetElement('messageContent'),
+            mediaFile: this.safeGetElement('mediaFile'),
+            scheduledFor: this.safeGetElement('scheduledFor'),
+            charCount: this.safeGetElement('charCount'),
             
             // Contact selection
-            contactSearch: document.getElementById('contactSearch'),
-            tagFilter: document.getElementById('tagFilter'),
-            groupFilter: document.getElementById('groupFilter'),
-            selectAll: document.getElementById('selectAll'),
-            contactsList: document.getElementById('contactsList'),
-            selectedCount: document.getElementById('selectedCount'),
+            contactSearch: this.safeGetElement('contactSearch'),
+            tagFilter: this.safeGetElement('tagFilter'),
+            groupFilter: this.safeGetElement('groupFilter'),
+            selectAll: this.safeGetElement('selectAll'),
+            contactsList: this.safeGetElement('contactsList'),
+            selectedCount: this.safeGetElement('selectedCount'),
             
             // Stats
-            totalSent: document.getElementById('totalSent'),
-            totalDelivered: document.getElementById('totalDelivered'),
-            totalRead: document.getElementById('totalRead'),
-            totalFailed: document.getElementById('totalFailed'),
+            totalSent: this.safeGetElement('totalSent'),
+            totalDelivered: this.safeGetElement('totalDelivered'),
+            totalRead: this.safeGetElement('totalRead'),
+            totalFailed: this.safeGetElement('totalFailed'),
             
             // Modals
-            loadingModal: new bootstrap.Modal(document.getElementById('loadingModal'))
+            loadingModal: this.safeCreateModal('loadingModal')
         };
     }
 
@@ -85,32 +97,44 @@ class DashboardManager {
         });
 
         // Message form
-        this.elements.messageForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            this.sendMessage();
-        });
+        if (this.elements.messageForm) {
+            this.elements.messageForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                this.sendMessage();
+            });
+        }
 
         // Character counter
-        this.elements.messageContent.addEventListener('input', () => {
-            this.updateCharCount();
-        });
+        if (this.elements.messageContent) {
+            this.elements.messageContent.addEventListener('input', () => {
+                this.updateCharCount();
+            });
+        }
 
         // Contact selection
-        this.elements.contactSearch.addEventListener('input', () => {
-            this.filterContacts();
-        });
+        if (this.elements.contactSearch) {
+            this.elements.contactSearch.addEventListener('input', () => {
+                this.filterContacts();
+            });
+        }
 
-        this.elements.tagFilter.addEventListener('change', () => {
-            this.filterContacts();
-        });
+        if (this.elements.tagFilter) {
+            this.elements.tagFilter.addEventListener('change', () => {
+                this.filterContacts();
+            });
+        }
 
-        this.elements.groupFilter.addEventListener('change', () => {
-            this.filterContacts();
-        });
+        if (this.elements.groupFilter) {
+            this.elements.groupFilter.addEventListener('change', () => {
+                this.filterContacts();
+            });
+        }
 
-        this.elements.selectAll.addEventListener('change', () => {
-            this.toggleSelectAll();
-        });
+        if (this.elements.selectAll) {
+            this.elements.selectAll.addEventListener('change', () => {
+                this.toggleSelectAll();
+            });
+        }
 
         // Auto-refresh stats
         setInterval(() => {
@@ -154,10 +178,11 @@ class DashboardManager {
     }
 
     updateStatsDisplay() {
-        this.elements.totalSent.textContent = this.stats.totalSent || 0;
-        this.elements.totalDelivered.textContent = this.stats.totalDelivered || 0;
-        this.elements.totalRead.textContent = this.stats.totalRead || 0;
-        this.elements.totalFailed.textContent = this.stats.totalFailed || 0;
+        // Verificar se os elementos existem antes de tentar atualizá-los
+        if (this.elements.totalSent) this.elements.totalSent.textContent = this.stats.totalSent || 0;
+        if (this.elements.totalDelivered) this.elements.totalDelivered.textContent = this.stats.totalDelivered || 0;
+        if (this.elements.totalRead) this.elements.totalRead.textContent = this.stats.totalRead || 0;
+        if (this.elements.totalFailed) this.elements.totalFailed.textContent = this.stats.totalFailed || 0;
     }
 
     async loadContacts() {
@@ -189,26 +214,36 @@ class DashboardManager {
 
     populateFilters(filters) {
         // Populate tag filter
-        this.elements.tagFilter.innerHTML = '<option value="">Todas as tags</option>';
-        filters.tags.forEach(tag => {
-            const option = document.createElement('option');
-            option.value = tag;
-            option.textContent = tag;
-            this.elements.tagFilter.appendChild(option);
-        });
+        if (this.elements.tagFilter) {
+            this.elements.tagFilter.innerHTML = '<option value="">Todas as tags</option>';
+            filters.tags.forEach(tag => {
+                const option = document.createElement('option');
+                option.value = tag;
+                option.textContent = tag;
+                this.elements.tagFilter.appendChild(option);
+            });
+        }
 
         // Populate group filter
-        this.elements.groupFilter.innerHTML = '<option value="">Todos os grupos</option>';
-        filters.groups.forEach(group => {
-            const option = document.createElement('option');
-            option.value = group;
-            option.textContent = group;
-            this.elements.groupFilter.appendChild(option);
-        });
+        if (this.elements.groupFilter) {
+            this.elements.groupFilter.innerHTML = '<option value="">Todos os grupos</option>';
+            filters.groups.forEach(group => {
+                const option = document.createElement('option');
+                option.value = group;
+                option.textContent = group;
+                this.elements.groupFilter.appendChild(option);
+            });
+        }
     }
 
     renderContacts() {
         const filteredContacts = this.getFilteredContacts();
+        
+        // Verificar se o elemento contactsList existe
+        if (!this.elements.contactsList) {
+            console.warn('Elemento contactsList não encontrado na página atual');
+            return;
+        }
         
         this.elements.contactsList.innerHTML = '';
         
@@ -254,9 +289,10 @@ class DashboardManager {
     }
 
     getFilteredContacts() {
-        const search = this.elements.contactSearch.value.toLowerCase();
-        const selectedTag = this.elements.tagFilter.value;
-        const selectedGroup = this.elements.groupFilter.value;
+        // Verificar se os elementos existem antes de acessar seus valores
+        const search = this.elements.contactSearch ? this.elements.contactSearch.value.toLowerCase() : '';
+        const selectedTag = this.elements.tagFilter ? this.elements.tagFilter.value : '';
+        const selectedGroup = this.elements.groupFilter ? this.elements.groupFilter.value : '';
 
         return this.contacts.filter(contact => {
             const matchesSearch = !search || 
@@ -285,6 +321,12 @@ class DashboardManager {
     }
 
     toggleSelectAll() {
+        // Verificar se o elemento selectAll existe
+        if (!this.elements.selectAll) {
+            console.warn('Elemento selectAll não encontrado na página atual');
+            return;
+        }
+        
         const isChecked = this.elements.selectAll.checked;
         const filteredContacts = this.getFilteredContacts();
 
@@ -302,6 +344,12 @@ class DashboardManager {
     }
 
     updateSelectAllState() {
+        // Verificar se o elemento selectAll existe
+        if (!this.elements.selectAll) {
+            console.warn('Elemento selectAll não encontrado na página atual');
+            return;
+        }
+        
         const filteredContacts = this.getFilteredContacts();
         const selectedFiltered = filteredContacts.filter(contact => 
             this.selectedContacts.has(contact._id)
@@ -320,10 +368,17 @@ class DashboardManager {
     }
 
     updateSelectedCount() {
-        this.elements.selectedCount.textContent = this.selectedContacts.size;
+        if (this.elements.selectedCount) {
+            this.elements.selectedCount.textContent = this.selectedContacts.size;
+        }
     }
 
     updateCharCount() {
+        // Verificar se os elementos existem antes de tentar atualizá-los
+        if (!this.elements.messageContent || !this.elements.charCount) {
+            return;
+        }
+        
         const count = this.elements.messageContent.value.length;
         this.elements.charCount.textContent = count;
         
@@ -339,6 +394,12 @@ class DashboardManager {
     async sendMessage() {
         if (this.selectedContacts.size === 0) {
             this.showToast('Selecione pelo menos um contato', 'warning');
+            return;
+        }
+
+        // Verificar se o elemento messageContent existe
+        if (!this.elements.messageContent) {
+            this.showToast('Erro ao acessar o campo de mensagem', 'error');
             return;
         }
 
@@ -386,7 +447,9 @@ class DashboardManager {
     }
 
     resetMessageForm() {
-        this.elements.messageForm.reset();
+        if (this.elements.messageForm) {
+            this.elements.messageForm.reset();
+        }
         this.selectedContacts.clear();
         this.updateSelectedCount();
         this.updateCharCount();
@@ -606,49 +669,77 @@ class DashboardManager {
     }
 
     showLoading(title = 'Carregando...', subtitle = 'Aguarde um momento') {
-        document.getElementById('loadingText').textContent = title;
-        document.getElementById('loadingSubtext').textContent = subtitle;
-        this.elements.loadingModal.show();
+        const loadingText = document.getElementById('loadingText');
+        const loadingSubtext = document.getElementById('loadingSubtext');
+        
+        if (loadingText) loadingText.textContent = title;
+        if (loadingSubtext) loadingSubtext.textContent = subtitle;
+        
+        if (this.elements.loadingModal) {
+            this.elements.loadingModal.show();
+        } else {
+            console.warn('Modal de carregamento não encontrado');
+        }
     }
 
     showToast(message, type = 'info') {
-        // Create toast container if it doesn't exist
-        let toastContainer = document.querySelector('.toast-container');
-        if (!toastContainer) {
-            toastContainer = document.createElement('div');
-            toastContainer.className = 'toast-container';
-            document.body.appendChild(toastContainer);
+        try {
+            // Verificar se o Bootstrap está disponível
+            if (typeof bootstrap === 'undefined') {
+                console.warn('Bootstrap não está disponível. Exibindo alerta simples.');
+                alert(message);
+                return;
+            }
+            
+            // Create toast container if it doesn't exist
+            let toastContainer = document.querySelector('.toast-container');
+            if (!toastContainer) {
+                toastContainer = document.createElement('div');
+                toastContainer.className = 'toast-container';
+                document.body.appendChild(toastContainer);
+            }
+
+            // Create toast
+            const toastId = 'toast-' + Date.now();
+            const toastHtml = `
+                <div id="${toastId}" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="toast-header">
+                        <i class="bi bi-${this.getToastIcon(type)} me-2 text-${type}"></i>
+                        <strong class="me-auto">Notificação</strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+                    </div>
+                    <div class="toast-body">
+                        ${message}
+                    </div>
+                </div>
+            `;
+
+            toastContainer.insertAdjacentHTML('beforeend', toastHtml);
+            
+            const toastElement = document.getElementById(toastId);
+            if (!toastElement) {
+                console.error('Não foi possível criar o elemento toast');
+                return;
+            }
+            
+            const toast = new bootstrap.Toast(toastElement, {
+                autohide: true,
+                delay: type === 'error' ? 5000 : 3000
+            });
+            
+            toast.show();
+
+            // Remove toast element after it's hidden
+            toastElement.addEventListener('hidden.bs.toast', () => {
+                if (toastElement && toastElement.parentNode) {
+                    toastElement.remove();
+                }
+            });
+        } catch (error) {
+            console.error('Erro ao exibir toast:', error);
+            // Fallback para alert simples em caso de erro
+            alert(message);
         }
-
-        // Create toast
-        const toastId = 'toast-' + Date.now();
-        const toastHtml = `
-            <div id="${toastId}" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-                <div class="toast-header">
-                    <i class="bi bi-${this.getToastIcon(type)} me-2 text-${type}"></i>
-                    <strong class="me-auto">Notificação</strong>
-                    <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
-                </div>
-                <div class="toast-body">
-                    ${message}
-                </div>
-            </div>
-        `;
-
-        toastContainer.insertAdjacentHTML('beforeend', toastHtml);
-        
-        const toastElement = document.getElementById(toastId);
-        const toast = new bootstrap.Toast(toastElement, {
-            autohide: true,
-            delay: type === 'error' ? 5000 : 3000
-        });
-        
-        toast.show();
-
-        // Remove toast element after it's hidden
-        toastElement.addEventListener('hidden.bs.toast', () => {
-            toastElement.remove();
-        });
     }
 
     getToastIcon(type) {

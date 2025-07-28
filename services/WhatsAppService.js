@@ -239,7 +239,9 @@ class WhatsAppService extends EventEmitter {
 
     try {
       const contacts = await this.client.getContacts();
-      return contacts.map(contact => ({
+      return contacts
+        .filter(contact => contact.isMyContact && !contact.isGroup)
+        .map(contact => ({
         id: contact.id._serialized,
         name: contact.name || contact.pushname || contact.id.user,
         phone: contact.id.user,

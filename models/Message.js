@@ -1,6 +1,31 @@
 const mongoose = require('mongoose');
 
 const messageSchema = new mongoose.Schema({
+  // Campo para identificar o tipo de mensagem (enviada ou recebida)
+  type: {
+    type: String,
+    enum: ['sent', 'received'],
+    default: 'sent'
+  },
+  // Campos para mensagens recebidas
+  sender: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Contact'
+  },
+  senderPhone: {
+    type: String
+  },
+  isRead: {
+    type: Boolean,
+    default: false
+  },
+  isArchived: {
+    type: Boolean,
+    default: false
+  },
+  readAt: {
+    type: Date
+  },
   content: {
     type: String,
     required: true

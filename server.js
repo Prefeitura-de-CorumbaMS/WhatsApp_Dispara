@@ -70,6 +70,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Servir Bootstrap e outros pacotes do node_modules
 app.use('/bootstrap', express.static(path.join(__dirname, 'node_modules/bootstrap/dist')));
 app.use('/@fortawesome', express.static(path.join(__dirname, 'node_modules/@fortawesome/fontawesome-free')));
+app.use('/jquery', express.static(path.join(__dirname, 'node_modules/jquery/dist')));
+app.use('/select2', express.static(path.join(__dirname, 'node_modules/select2/dist')));
+app.use('/select2-bootstrap-5-theme', express.static(path.join(__dirname, 'node_modules/select2-bootstrap-5-theme/dist')));
 
 // View engine setup
 app.set('view engine', 'ejs');
