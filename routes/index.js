@@ -10,25 +10,21 @@ const contactsRoutes = require('./contacts');
 const diagnosticsRoutes = require('./diagnostics');
 const templatesRoutes = require('./templates');
 const reportsRoutes = require('./reports');
+const conversationRoutes = require('./conversation');
 
 // Middleware para verificar se o WhatsApp está conectado
 const checkWhatsAppConnection = async (req, res, next) => {
     try {
-        // Se já existe uma flag na sessão indicando que está conectado, prossegue
-        if (req.session && req.session.whatsappConnected) {
-            return next();
-        }
-        
-        // Caso contrário, verifica o status atual
+        // Sempre verifica o status atual do WhatsApp em cada requisição
         const WhatsAppService = require('../services/WhatsAppService');
         const status = await WhatsAppService.getStatus();
         
         if (status === 'CONNECTED') {
-            // Se estiver conectado, salva na sessão e prossegue
-            req.session.whatsappConnected = true;
+            // Se estiver conectado, prossegue
             return next();
         } else {
             // Se não estiver conectado, redireciona para a página de conexão
+            console.log('WhatsApp não está conectado. Redirecionando para página de conexão...');
             return res.redirect('/connection');
         }
     } catch (error) {
@@ -132,5 +128,6 @@ router.use('/api/contacts', contactsRoutes);
 router.use('/api/diagnostics', diagnosticsRoutes);
 router.use('/api/templates', templatesRoutes);
 router.use('/api/reports', reportsRoutes);
+router.use('/api/conversation', conversationRoutes);
 
 module.exports = router;

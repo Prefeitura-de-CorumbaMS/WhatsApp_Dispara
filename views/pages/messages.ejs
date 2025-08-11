@@ -91,38 +91,59 @@
                     </h3>
                     <div class="btn-group">
                         <button type="button" class="btn btn-sm btn-info active" id="show-all-messages">Todas</button>
-                        <button type="button" class="btn btn-sm btn-light" id="show-open-messages">Abertas</button>
                         <button type="button" class="btn btn-sm btn-light" id="show-archived-messages">Arquivadas</button>
                     </div>
                 </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle">
-                            <thead class="table-light">
-                                <tr>
-                                    <th class="border-0">Data/Hora</th>
-                                    <th class="border-0">Remetente</th>
-                                    <th class="border-0">Mensagem</th>
-                                    <th class="border-0">Status</th>
-                                    <th class="border-0 text-end">Ações</th>
-                                </tr>
-                            </thead>
-                            <tbody id="received-messages-table-body" class="border-top-0">
-                                <tr>
-                                    <td colspan="5" class="text-center py-4">
-                                        <div class="d-flex flex-column align-items-center">
-                                            <div class="spinner-border text-info mb-2" role="status">
-                                                <span class="visually-hidden">Carregando...</span>
-                                            </div>
-                                            <span class="text-muted">Carregando mensagens recebidas...</span>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div id="received-messages-pagination" class="d-flex justify-content-center mt-4">
-                        <!-- Paginação será inserida via JavaScript -->
+                <div class="card-body p-0">
+                    <div class="row g-0" style="height: 600px;">
+                        <!-- Lista de contatos (lado esquerdo) -->
+                        <div class="col-md-4 border-end" style="height: 100%; overflow-y: auto;">
+                            <div class="list-group list-group-flush" id="contacts-list">
+                                <!-- Lista de contatos será carregada via JavaScript -->
+                                <div class="text-center py-4">
+                                    <div class="spinner-border text-info mb-2" role="status">
+                                        <span class="visually-hidden">Carregando...</span>
+                                    </div>
+                                    <span class="text-muted">Carregando contatos...</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Área de conversa (lado direito) -->
+                        <div class="col-md-8 d-flex flex-column" style="height: 100%;">
+                            <!-- Cabeçalho do contato selecionado -->
+                            <div class="p-3 border-bottom d-flex align-items-center" id="selected-contact-header">
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-light rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 40px; height: 40px;">
+                                        <i class="fas fa-user text-secondary"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-0" id="selected-contact-name">Selecione um contato</h6>
+                                        <small class="text-muted" id="selected-contact-status"></small>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Área de mensagens -->
+                            <div class="flex-grow-1 p-3" id="messages-container" style="overflow-y: auto; background-color: #f5f5f5;">
+                                <div class="d-flex flex-column align-items-center justify-content-center h-100">
+                                    <div class="text-center">
+                                        <i class="fas fa-comments text-muted mb-3" style="font-size: 3rem;"></i>
+                                        <h5 class="text-muted">Selecione um contato para ver as mensagens</h5>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Área de envio de mensagem -->
+                            <div class="p-3 border-top" id="message-input-area">
+                                <form id="send-message-form" class="d-flex">
+                                    <input type="text" class="form-control me-2" id="message-input" placeholder="Digite uma mensagem" >
+                                    <button type="submit" class="btn btn-primary" id="send-message-btn" >
+                                        <i class="fas fa-paper-plane"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
