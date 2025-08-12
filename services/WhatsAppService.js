@@ -256,9 +256,24 @@ class WhatsAppService extends EventEmitter {
 
   async disconnect() {
     if (this.client) {
-      await this.client.logout();
-      await this.client.destroy();
-      this.client = null;
+      try {
+        // Primeiro destruir o cliente para liberar recursos
+        await this.client.destroy();
+        
+        // Tentar fazer logout após destruir o cliente
+        try {
+          await this.client.logout();
+        } catch (logoutError) {
+          console.warn('Erro ao fazer logout do WhatsApp, mas continuando com a desconexão:', logoutError.message);
+          // Não propagar o erro de logout para permitir que o processo continue
+        }
+        
+        this.client = null;
+      } catch (error) {
+        console.error('Erro durante a desconexão do WhatsApp:', error);
+        // Garantir que o cliente seja definido como nulo mesmo em caso de erro
+        this.client = null;
+      }
     }
 
     this.isConnected = false;
