@@ -43,8 +43,7 @@ const messageSchema = new mongoose.Schema({
   },
   recipients: [{
     contactId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Contact',
+      type: mongoose.Schema.Types.Mixed,  // Aceitar tanto ObjectId quanto string
       required: true
     },
     phone: {

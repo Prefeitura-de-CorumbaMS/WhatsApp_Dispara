@@ -197,16 +197,49 @@ router.post('/send', upload.single('media'), [
     }
 
     const { content, recipients, scheduledFor } = req.body;
-    const recipientIds = JSON.parse(recipients);
+    // Verificar se recipients já é um array ou se precisa ser parseado
+    const recipientIds = Array.isArray(recipients) ? recipients : JSON.parse(recipients);
 
-    // Get contacts
-    const contacts = await Contact.find({ 
-      _id: { $in: recipientIds },
-      isActive: true,
-      isBlocked: false
-    });
+    // Verificar se os IDs parecem ser do WhatsApp (formato: número@c.us)
+    const whatsappIds = recipientIds.filter(id => id.includes('@c.us'));
+    const mongoIds = recipientIds.filter(id => id.match(/^[0-9a-fA-F]{24}$/));
+    
+    // Array para armazenar contatos válidos
+    let validContacts = [];
+    
+    // Se temos IDs do MongoDB, buscar no banco de dados
+    if (mongoIds.length > 0) {
+      const dbContacts = await Contact.find({
+        _id: { $in: mongoIds },
+        isActive: true,
+        isBlocked: false
+      });
+      validContacts = validContacts.concat(dbContacts);
+    }
+    
+    // Se temos IDs do WhatsApp, criar contatos virtuais para eles
+    if (whatsappIds.length > 0) {
+      for (const whatsappId of whatsappIds) {
+        // Verificar se o WhatsApp reconhece este ID
+        try {
+          const chat = await WhatsAppService.client.getChatById(whatsappId);
+          const contact = await WhatsAppService.client.getContactById(whatsappId);
+          
+          // Criar um contato virtual (não salvo no banco)
+          validContacts.push({
+            _id: whatsappId, // Usar o ID do WhatsApp como _id
+            phone: whatsappId.split('@')[0],
+            name: contact.name || contact.pushname || whatsappId,
+            whatsappId: whatsappId
+          });
+        } catch (error) {
+          console.error(`Erro ao verificar contato ${whatsappId}:`, error.message);
+          // Ignorar este contato inválido
+        }
+      }
+    }
 
-    if (contacts.length === 0) {
+    if (validContacts.length === 0) {
       return res.status(400).json({
         success: false,
         message: 'No valid recipients found'
@@ -217,7 +250,7 @@ router.post('/send', upload.single('media'), [
     const messageData = {
       content,
       type: req.file ? req.file.mimetype.split('/')[0] : 'text',
-      recipients: contacts.map(contact => ({
+      recipients: validContacts.map(contact => ({
         contactId: contact._id,
         phone: contact.phone,
         name: contact.name,

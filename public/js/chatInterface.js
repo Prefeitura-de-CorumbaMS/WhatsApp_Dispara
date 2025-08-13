@@ -324,8 +324,9 @@ class ChatInterfaceManager {
                             messageContent = `
                                 <div class="message-media mb-2">
                                     <img src="data:${message.media.mimetype};base64,${message.media.data}" 
-                                         class="img-fluid rounded" style="max-height: 200px;" 
-                                         onclick="window.open(this.src)" alt="Imagem">
+                                         class="img-fluid rounded clickable-image" style="max-height: 200px; cursor: pointer;" 
+                                         data-message-id="${message._id}"
+                                         onclick="if(window.imageViewer) window.imageViewer.showViewer([{url: this.src, id: '${message._id}', title: 'Imagem da conversa'}], 0)" alt="Imagem">
                                 </div>
                                 ${message.content ? `<div class="message-text" style="white-space: pre-wrap; color: #000000;">${message.content}</div>` : ''}
                             `;
@@ -456,10 +457,15 @@ class ChatInterfaceManager {
     }
 
     async sendMessage() {
-        if (!this.selectedContact) return;
-        
+        console.log('Função sendMessage() chamada');
         const messageInput = document.getElementById('message-input');
         if (!messageInput || !messageInput.value.trim()) return;
+        
+        if (!this.selectedContact) {
+            // Exibir alerta se nenhum contato estiver selecionado
+            this.showToast('Por favor, selecione um contato para enviar a mensagem', 'warning');
+            return;
+        }
         
         const messageContent = messageInput.value.trim();
         messageInput.value = '';
@@ -538,21 +544,54 @@ class ChatInterfaceManager {
             }
         } catch (error) {
             console.error('Erro ao marcar mensagens como lidas:', error);
+            this.showToast('Erro ao marcar mensagens como lidas', 'error');
         }
     }
 
     connectToMessageEvents() {
-        const eventSource = new EventSource('/api/messages/events');
-
-        eventSource.onmessage = (event) => {
-            const message = JSON.parse(event.data);
+        // Conectar ao socket para receber mensagens em tempo real
+        const socket = io();
+        
+        socket.on('message-received', (message) => {
+            console.log('Nova mensagem recebida:', message);
             this.handleNewMessage(message);
-        };
-
-        eventSource.onerror = (error) => {
-            console.error('EventSource failed:', error);
-            eventSource.close();
-        };
+        });
+    }
+    
+    showToast(message, type = 'info') {
+        // Criar elemento toast
+        const toastId = 'toast-' + Date.now();
+        const toastHTML = `
+            <div id="${toastId}" class="toast align-items-center border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                    <div class="toast-body bg-${type === 'error' ? 'danger' : type === 'warning' ? 'warning' : 'info'} text-white">
+                        ${message}
+                    </div>
+                    <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Fechar"></button>
+                </div>
+            </div>
+        `;
+        
+        // Adicionar toast ao container (criar se não existir)
+        let toastContainer = document.getElementById('toast-container');
+        if (!toastContainer) {
+            toastContainer = document.createElement('div');
+            toastContainer.id = 'toast-container';
+            toastContainer.className = 'toast-container position-fixed bottom-0 end-0 p-3';
+            document.body.appendChild(toastContainer);
+        }
+        
+        toastContainer.insertAdjacentHTML('beforeend', toastHTML);
+        
+        // Inicializar e mostrar o toast
+        const toastElement = document.getElementById(toastId);
+        const toast = new bootstrap.Toast(toastElement, { delay: 3000 });
+        toast.show();
+        
+        // Remover após ocultar
+        toastElement.addEventListener('hidden.bs.toast', () => {
+            toastElement.remove();
+        });
     }
 
     handleNewMessage(message) {

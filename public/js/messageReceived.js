@@ -355,7 +355,10 @@ class MessageReceivedManager {
                                             <h6>Mídia:</h6>
                                             <div class="text-center">
                                                 ${message.media.mimeType?.startsWith('image') 
-                                                    ? `<img src="${message.media.url}" class="img-fluid rounded" style="max-height: 300px;">` 
+                                                    ? `<img src="${message.media.url}" class="img-fluid rounded clickable-image" 
+                                                           style="max-height: 300px; cursor: pointer;" 
+                                                           data-message-id="${message._id}"
+                                                           onclick="window.messageReceivedManager.openImageViewer('${message._id}')">` 
                                                     : `<a href="${message.media.url}" target="_blank" class="btn btn-sm btn-outline-primary">
                                                         <i class="fas fa-download me-2"></i>Baixar Mídia
                                                       </a>`
@@ -441,6 +444,97 @@ class MessageReceivedManager {
         }
     }
 
+    async unarchiveMessage(messageId) {
+        try {
+            const response = await fetch(`/api/messages/received/${messageId}/unarchive`, {
+                method: 'PUT'
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                this.showToast('Mensagem desarquivada com sucesso', 'success');
+                this.loadReceivedMessages(this.currentPage);
+            } else {
+                this.showToast(result.message || 'Erro ao desarquivar mensagem', 'error');
+            }
+        } catch (error) {
+            console.error('Error unarchiving message:', error);
+            this.showToast('Erro ao desarquivar mensagem', 'error');
+        }
+    }
+    
+    /**
+     * Abre o visualizador de imagens com todas as imagens da conversa atual
+     * @param {string} messageId - ID da mensagem cuja imagem foi clicada
+     */
+    async openImageViewer(messageId) {
+        try {
+            // Obter a mensagem atual para extrair o contato
+            const response = await fetch(`/api/messages/received/${messageId}`);
+            const result = await response.json();
+            
+            if (!result.success || !result.data) {
+                console.error('Erro ao obter detalhes da mensagem');
+                return;
+            }
+            
+            const message = result.data;
+            const contactPhone = message.senderPhone;
+            
+            if (!contactPhone) {
+                console.error('Telefone do contato não encontrado');
+                return;
+            }
+            
+            // Buscar todas as mensagens com imagens da conversa com este contato
+            const conversationResponse = await fetch(`/api/messages/conversation/${contactPhone}`);
+            const conversationResult = await conversationResponse.json();
+            
+            if (!conversationResult.success || !conversationResult.data) {
+                console.error('Erro ao carregar conversa');
+                return;
+            }
+            
+            // Filtrar apenas mensagens com mídia do tipo imagem
+            const imageMessages = conversationResult.data.filter(msg => 
+                msg.media && 
+                msg.media.url && 
+                msg.media.mimeType && 
+                msg.media.mimeType.startsWith('image')
+            );
+            
+            // Preparar array de imagens para o visualizador
+            const images = imageMessages.map(msg => ({
+                url: msg.media.url,
+                id: msg._id,
+                title: `Imagem de ${new Date(msg.createdAt).toLocaleString('pt-BR')}`,
+                timestamp: new Date(msg.createdAt)
+            }));
+            
+            // Ordenar imagens por data (mais recentes primeiro)
+            images.sort((a, b) => b.timestamp - a.timestamp);
+            
+            // Encontrar o índice da imagem clicada
+            let startIndex = 0;
+            if (messageId) {
+                const index = images.findIndex(img => img.id === messageId);
+                if (index !== -1) startIndex = index;
+            }
+            
+            // Abrir o visualizador de imagens
+            if (window.imageViewer && images.length > 0) {
+                window.imageViewer.showViewer(images, startIndex);
+            } else {
+                console.error('Visualizador de imagens não encontrado ou não há imagens para exibir');
+                this.showToast('Não foi possível exibir a imagem', 'error');
+            }
+        } catch (error) {
+            console.error('Erro ao abrir visualizador de imagens:', error);
+            this.showToast('Erro ao carregar imagens da conversa', 'error');
+        }
+    }
+    
     async unarchiveMessage(messageId) {
         try {
             const response = await fetch(`/api/messages/received/${messageId}/unarchive`, {
